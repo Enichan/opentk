@@ -202,6 +202,7 @@
     <Compile Include="Platform\Egl\EglWinContext.cs" />
     <Compile Include="Platform\MappedGamePadDriver.cs" />
     <Compile Include="Platform\Windows\Bindings\HidProtocol.cs" />
+    <Compile Include="Platform\Windows\WinGLNative.Eni.cs" />
     <Compile Include="Platform\Windows\WinInputBase.cs" />
     <Compile Include="Platform\Windows\WinRawJoystick.cs" />
     <Compile Include="Platform\Windows\XInputJoystick.cs" />
@@ -892,8 +893,5 @@
     </MonoDevelop>
   </ProjectExtensions>
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="Platform\Linux\" />
-    <Folder Include="Platform\Linux\Bindings\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -45,7 +45,7 @@ namespace OpenTK.Platform.Windows
     /// Drives GameWindow on Windows.
     /// This class supports OpenTK, and is not intended for use by OpenTK programs.
     /// </summary>
-    internal sealed class WinGLNative : NativeWindowBase
+    internal sealed partial class WinGLNative : NativeWindowBase
     {
         #region Fields
 
@@ -656,6 +656,31 @@ namespace OpenTK.Platform.Windows
         IntPtr WindowProcedure(IntPtr handle, WindowMessage message, IntPtr wParam, IntPtr lParam)
         {
             IntPtr? result = null;
+
+            // ENI: custom window procedure
+            var onWindowProc = OnWindowProc;
+            if (onWindowProc != null) {
+                var msg = new CustomWindowMessage((uint)message, wParam, lParam);
+                onWindowProc(this, msg);
+                if (msg.Result.HasValue) {
+                    return msg.Result.Value;
+                }
+                message = (WindowMessage)msg.Message;
+                wParam = msg.WParam;
+                lParam = msg.LParam;
+            }
+            else {
+                // if we haven't manually handled the IME we want to block it by default
+                // this also fixes the first set context occurring before we can hook the wndproc
+                if (message == WindowMessage.IME_SETCONTEXT) {
+                    var v = (long)lParam;
+                    v &= ~0xC000000F;
+                    lParam = (IntPtr)v;
+                }
+                else if (message == WindowMessage.IME_STARTCOMPOSITION) {
+                    return IntPtr.Zero;
+                }
+            }
 
             switch (message)
             {
